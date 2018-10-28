@@ -63,12 +63,12 @@ void setup() {
 	httpRequest(factorio_server);
 	delay(250);
 	parseData();
-	delay(250);
-	httpRequest(discord_webhook);
-	delay(250);
-	parse_webhook();
+	//delay(250);
+	//httpRequest(discord_webhook);
+	//delay(250);
+	//parse_webhook();
   
-	postData(discord_server + "/webhooks/" + String(webhook_data.id) + "/" + String(webhook_data.token));
+	postData(discord_webhook);
 }
 
 void loop() {
