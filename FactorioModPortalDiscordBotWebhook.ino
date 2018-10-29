@@ -30,7 +30,7 @@ struct mod_structure {
 	const char* downloads_count;
 };
 
-struct webhook_strcuture {
+struct webhook_structure {
 	const char* id;
 	const char* guild_id;
 	const char* token;
@@ -39,7 +39,7 @@ struct webhook_strcuture {
 };
 
 mod_structure mod_data;
-webhook_strcuture webhook_data;
+webhook_structure webhook_data;
 
 void setup() {
 	/*lcd.init();
@@ -109,9 +109,16 @@ bool postData(String post_url) {
 	Serial.println("Download: https://mods.factorio.com" + String(mod_data.download_url));
 	Serial.println("Downloaded " + String(mod_data.downloads_count) + " times");
 	
-	JSONencoder["content"] = "Mod name: " + String(mod_data.name) + "\nOwner: " + String(mod_data.owner) + "\nLatest version: " + String(mod_data.version) + "\nDownload: https://mods.factorio.com" + String(mod_data.download_url) + "\nDownloaded " + String(mod_data.downloads_count) + " times.";
+	String discord_message = "";
+	discord_message = "Mod name: " + String(mod_data.name) + "\nOwner: " + String(mod_data.owner) + "\nLatest version: " + String(mod_data.version) + "\nDownload: https://mods.factorio.com" + String(mod_data.download_url) + "\nDownloaded " + String(mod_data.downloads_count) + " times.";
+	discord_message.c_str();
+	Serial.println("discord_message:");
+	Serial.println(discord_message);
+	JSONencoder["content"] = discord_message;
 	
 	char JSONmessageBuffer[300];
+	Serial.println("JSONencoder:");
+	JSONencoder.prettyPrintTo(Serial);
 	JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
 	
 	HTTPClient post_client;
