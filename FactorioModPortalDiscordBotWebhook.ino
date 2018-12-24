@@ -9,11 +9,11 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-const char* ssid = "ssid";
-const char* password = "password";
-const String mod_name = "mod_name";
+const char* ssid = "ssid";                                                         //Enter your wifi's ssid here
+const char* password = "password";                                                 //And password here
+const String mod_name = "modname";                                                 //Here paste your mod name
 const String factorio_server = "https://mods.factorio.com/api/mods/" + mod_name;
-const String discord_webhook = "discord_webhook";
+const String discord_webhook = "discord_webhook";                                  //Paste your webhook here
 const String discord_server = "https://discordapp.com/api";
 
 unsigned long lastConnectionTime = 0;
@@ -30,16 +30,16 @@ struct mod_structure {
 	const char* downloads_count;
 };
 
-struct webhook_structure {
+/*struct webhook_structure {
 	const char* id;
 	const char* guild_id;
 	const char* token;
 	const char* channel_id;
 	const char* name;
-};
+};*/
 
 mod_structure mod_data;
-webhook_structure webhook_data;
+//webhook_structure webhook_data;
 
 void setup() {
 	/*lcd.init();
@@ -99,7 +99,8 @@ bool httpRequest(String url) {
 }
 
 bool postData(String post_url) {
-	StaticJsonBuffer<300> JSONbuffer;
+	//Old code.
+	StaticJsonBuffer<600> JSONbuffer;
 	JsonObject& JSONencoder = JSONbuffer.createObject();
 	
 	Serial.println("Forming message. Content:");
@@ -109,23 +110,26 @@ bool postData(String post_url) {
 	Serial.println("Download: https://mods.factorio.com" + String(mod_data.download_url));
 	Serial.println("Downloaded " + String(mod_data.downloads_count) + " times");
 	
-	String discord_message = "";
+	/*String discord_message = "";
 	discord_message = "Mod name: " + String(mod_data.name) + "\nOwner: " + String(mod_data.owner) + "\nLatest version: " + String(mod_data.version) + "\nDownload: https://mods.factorio.com" + String(mod_data.download_url) + "\nDownloaded " + String(mod_data.downloads_count) + " times.";
 	discord_message.c_str();
 	Serial.println("discord_message:");
-	Serial.println(discord_message);
-	JSONencoder["content"] = discord_message;
+	Serial.println(discord_message);*/
+	JSONencoder["content"] = "Mod name: " + String(mod_data.name) + "\nOwner: " + String(mod_data.owner) + "\nLatest version: " + String(mod_data.version) + "\nDownload: https://mods.factorio.com" + String(mod_data.download_url) + "\nDownloaded " + String(mod_data.downloads_count) + " times.";
 	
-	char JSONmessageBuffer[300];
+	char JSONmessageBuffer[600];
 	Serial.println("JSONencoder:");
 	JSONencoder.prettyPrintTo(Serial);
 	JSONencoder.prettyPrintTo(JSONmessageBuffer, sizeof(JSONmessageBuffer));
+	Serial.println("JSONmessageBuffer:");
+	Serial.println(JSONmessageBuffer);
 	
 	HTTPClient post_client;
 	post_client.begin(post_url);
 	post_client.addHeader("Content-Type", "application/json"); //Specify content-type header
 	int httpCode = post_client.POST(JSONmessageBuffer); //Send the request
 	String payload = post_client.getString(); //Get the response payload
+	Serial.println("Response:");
 	Serial.println(httpCode); //Print HTTP return code
 	Serial.println(payload); //Print request response payload
 	post_client.end(); //Close connection
@@ -166,11 +170,27 @@ bool parseData() {
 	mod_data.owner           = mod_root["owner"];
 	mod_data.downloads_count = mod_root["downloads_count"];
 	
+	Serial.println("mod_data forming finished. Result:");
+	Serial.print("mod_data.download_url = ");
+	Serial.println(String(mod_data.download_url));
+	Serial.print("mod_data.file_name = ");
+	Serial.println(String(mod_data.file_name));
+	Serial.print("mod_data.released_at = ");
+	Serial.println(String(mod_data.released_at));
+	Serial.print("mod_data.version = ");
+	Serial.println(String(mod_data.version));
+	Serial.print("mod_data.name = ");
+	Serial.println(String(mod_data.name));
+	Serial.print("mod_data.owner = ");
+	Serial.println(String(mod_data.owner));
+	Serial.print("mod_data.downloads_count = ");
+	Serial.println(String(mod_data.downloads_count));
+	
 	httpData = "";
 	return true;
 }
 
-bool parse_webhook() {
+/*bool parse_webhook() {
 	Serial.println("Webhook parsing started, httpData:");
 	Serial.println(httpData);
 	Serial.print("\n");
@@ -196,4 +216,4 @@ bool parse_webhook() {
 	
 	httpData = "";
 	return true;
-}
+}*/
